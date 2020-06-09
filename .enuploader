@@ -1,0 +1,38 @@
+const path = require('path')
+const fs = require('fs');
+const os = require('os');
+
+// read in the secret variables from user's homefolder
+let raw = fs.readFileSync(path.join(os.homedir(), ".npm-en-uploader-secret"));
+let secrets = JSON.parse(raw);
+
+// the target en pageId
+const enPageId = 55747 // EDIT_HERE
+
+// build folder path
+const buildDirPath = path.join(__dirname, "build")
+
+module.exports = {
+	ftp: Object.assign({}, secrets["ftp_tw"], { // EDIT_HERE: Which ftp site you want to use
+		"execute": true,
+		"localDir": buildDirPath,
+		"remoteDir": "/htdocs/2020/petition/zh-tw.2020.climate.vote", // EDIT_HERE
+	}),
+
+	enBase: Object.assign({}, secrets["en"], {
+		"enPageId": enPageId,
+		"account": "Greenpeace Taiwan" // EDIT_HERE: change this if you have multi acconts
+	}),
+
+	enHeaderFooter: {
+		"execute": true,
+		"enPageId": enPageId,
+		"indexPath": path.join(buildDirPath, 'index.html') // EDIT_HERE: the path to your build/index.html file
+	},
+
+	enThankYouEmail: {
+		"execute": false,
+		"enPageId": enPageId,
+		"mailPath": "src/ThankyouEmail.html", // EDIT_HERE: the path to your email template
+	}
+}

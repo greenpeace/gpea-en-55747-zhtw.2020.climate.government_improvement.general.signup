@@ -58,8 +58,8 @@
 							扭轉氣候危機<br />
 							你希望臺灣優先做出哪些改變？<br />
 							<br />
-							動動手指，勾選與您想法相符的選項<br>
-							或與我們 <a href="#" class="text-link typing-btn">分享其他有趣的想法</a>。
+							動動手指，勾選與您想法相符的選項。<br>
+							<!-- 或與我們 <a href="#" class="text-link typing-btn">分享其他有趣的想法</a> -->
 						</p>
 						<a href="#" class="btn btn2 next-btn hidden-m">確 定 投 票<span class='indicator'>(<span class="count">0</span>/3)</span></a>
 					</div>
@@ -187,8 +187,10 @@
 						</div>
 					</div>
 					<div class="callout clearfix">
-						<h3 class="">你有更大膽的想法嗎？歡迎告訴我們！</h3>
-						<a href="#" class="btn btn1 typing-btn">YES!</a>
+						<div class="marquee-left">
+							<p id="voting-page-marquee"></p>
+						</div>
+						<!-- <a href="#" class="btn btn1 typing-btn">YES!</a> -->
 					</div>
 					<a href="#" class="sticky-btn btn btn2 next-btn hidden-d">確 定 投 票<span class='indicator'>(<span class="count">0</span>/3)</span></a>
 				</div>
@@ -213,7 +215,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="typing-panel">
+				<!-- <div id="typing-panel">
 					<a href="#" class="close-btn">&#10005;</a>
 					<div class="content">
 						<div class="m-content">
@@ -227,7 +229,7 @@
 						</div>
 						<a href="#" id="type-next-btn" class="btn btn2">送出</a>
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<div id="form">
 				<div class="left-col">
@@ -244,9 +246,9 @@
 						<form id="fake-form">
 							<input type="hidden" name="options" value="" />
 
-							<div class="form-field text-field  mandatory">
+							<div class="form-field text-field mandatory">
 								<input id="fake_supporter_emailAddress" type="email" class="fake_input" name="fake.supporter.emailAddress" value="" required />
-								<label for="fake_supporter_emailAddress" class="" style="">電子信箱</label>
+								<label for="fake_supporter_emailAddress" class="email-autocomplete-label" style="">電子信箱</label>
 							</div>
 							<label id="fake_supporter_emailAddress-error" class="error" for="fake_supporter_emailAddress"></label>
 
@@ -281,6 +283,11 @@
 							</div>
 							<label id="fake_supporter_birthYear-error" class="error" for="fake_supporter_birthYear"></label>
 
+							<div class="form-field textarea-field">
+								<textarea id="fake_message" rows="8" class="fake_input fake_message" name="fake.supporter.message" placeholder="關於氣候危機，我還有話想說..." required></textarea>
+							</div>
+							<label id="fake_supporter_message-error" class="error" for="fake_supporter_message"></label>
+
 							<div class="en__submit">
 								<button style="" class="btn btn2">OK</button>
 							</div>
@@ -289,7 +296,11 @@
 									<input id="fake_optin" type="checkbox" class="fake_input" name="fake.supporter.emailOptin" value="" checked />
 									<div class="fake-cb"></div>
 								</div>
-								<label for="fake_optin" class="" style="">我願意收到綠色和平發送的電子通訊，掌握環保工作的最新消息！我並同意綠色和平按照其<a href="https://act.gp/37yxM6k" title="個人隱私政策" target="_blank">個人隱私政策</a>與我保持聯絡。</label>
+								<label for="fake_optin" class="" style="">
+									我願意收到綠色和平發送的電子通訊，掌握環保工作的最新消息！我並同意綠色和平按照其
+									<a href="https://act.gp/3b0Gs8d" title="個人隱私政策" target="_blank">個人隱私政策</a>
+									與我保持聯絡。
+								</label>
 							</div>
 							<label id="fake.supporter.emailOptin-error" class="error" for="fake.supporter.emailOptin"></label>
 							<a href="#" class="hidden back-link back-btn">
@@ -337,6 +348,19 @@
 								<div class="lds-dual-ring"></div>
 							</div>
 						</div>
+						<div>
+							<h1>大家怎麼說？</h1>
+							<div class="marquee-top-container">
+								<div class="top-cover"></div>
+								<div class="marquee-top">
+									<p id="result-page-marquee"></p>
+								</div>
+								<div class="bottom-cover"></div>
+							</div>
+						</div>
+						<div class="share-btn-copy">
+
+						</div>
 					</div>
 				</div>
 				<div class="right-col options">
@@ -344,13 +368,13 @@
 						<img class="icon2" src="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1735/handshake.svg?v=1537757925000" alt="Thanks for sharing!">
 						<h3 class="b">馬上與朋友分享你的看法！</h3>
 						<div class="btns">
-							<a role="button" tabindex="1" class="share-btn fb-share" target="_blank" href="http://www.facebook.com/sharer.php?s=100&u=https://act.gp/2SEz4Z5">
+							<a role="button" tabindex="1" class="share-btn fb-share" target="_blank" href="http://www.facebook.com/sharer.php?s=100&u=https%3A%2F%2Fact.greenpeace.org%2Fpage%2F55747%2Fpetition%2F1%3Futm_campaign%3D2020-climate-vote%26utm_source%3Dfacebook%26utm_medium%3Dsocialorganic%26utm_content%3D2020-climate-vote_petition_tkpage">
 								<span class="sr-text">分享到 Facebook</span>
 								<span class="icon-wrapper">
 									<i class="fab fa-facebook-square"></i>
 								</span>
 							</a>
-							<a role="button" tabindex="1" class="share-btn tt-share" target="_blank" href="https://lineit.line.me/share/ui?url=https://act.gp/39FPshI&text=我剛剛選出臺灣對抗氣候危機的方法了！你也來分享你的看法吧～">
+							<a role="button" tabindex="1" class="share-btn tt-share" target="_blank" href="https://lineit.line.me/share/ui?url=https%3A%2F%2Fact.greenpeace.org%2Fpage%2F55747%2Fpetition%2F1%3Futm_campaign%3D2020-climate-vote%26utm_source%3Dline%26utm_medium%3Dsocialorganic%26utm_content%3D2020-climate-vote_petition_tkpage&text=我剛剛選出臺灣對抗氣候危機的方法了！你也來分享你的看法吧～">
 								<span class="sr-text">分享到 LINE</span>
 								<span class="icon-wrapper">
 									<i class="fab fa-line"></i>
@@ -450,17 +474,17 @@
 		<div id="sticky_widget">
 			<div class="logo">
 				<div class="sr-text">PRESENTED BY Greenpeace</div>
-				<a href="https://act.gp/2P7uz7o" target="_blank"><img id="gp-logo" src="%PUBLIC_URL%/logo_zh.png?v=1537757721000" alt="Greenpeace logo" /></a>
+				<a href="https://www.greenpeace.org/taiwan/?ref=2020-climate-vote_footer_homepage" target="_blank"><img id="gp-logo" src="%PUBLIC_URL%/logo_zh.png?v=1537757721000" alt="Greenpeace logo" /></a>
 			</div>
 			<span class="txt hidden">SHARE</span>
 			<div class="btns">
-				<a role="button" tabindex="1" class="share-btn fb-share" target="_blank" href="http://www.facebook.com/sharer.php?s=100&u=https://act.gp/2SEz4Z5">
+				<a role="button" tabindex="1" class="share-btn fb-share" target="_blank" href="http://www.facebook.com/sharer.php?s=100&u=https%3A%2F%2Fact.greenpeace.org%2Fpage%2F55747%2Fpetition%2F1%3Futm_campaign%3D2020-climate-vote%26utm_source%3Dfacebook%26utm_medium%3Dsocialorganic%26utm_content%3D2020-climate-vote_footer_fb_share">
 					<span class="sr-text">Facebook</span>
 					<span class="icon-wrapper">
 						<i class="fab fa-facebook-square"></i>
 					</span>
 				</a>
-				<a role="button" tabindex="1" class="share-btn tt-share" target="_blank" href="https://lineit.line.me/share/ui?url=https://act.gp/39FPshI&text=我剛剛選出臺灣對抗氣候危機的方法了！你也來分享你的看法吧～">
+				<a role="button" tabindex="1" class="share-btn tt-share" target="_blank" href="https://lineit.line.me/share/ui?url=https%3A%2F%2Fact.greenpeace.org%2Fpage%2F55747%2Fpetition%2F1%3Futm_campaign%3D2020-climate-vote%26utm_source%3Dline%26utm_medium%3Dsocialorganic%26utm_content%3D2020-climate-vote_footer_line_share&text=我剛剛選出臺灣對抗氣候危機的方法了！你也來分享你的看法吧～">
 					<span class="sr-text">LINE</span>
 					<span class="icon-wrapper">
 						<i class="fab fa-line"></i>
@@ -477,6 +501,52 @@
 	</div>
 	<script src="%PUBLIC_URL%/plugins.1.js?v=1537759485000"></script>
 	<script src="%PUBLIC_URL%/plugins.2.js?v=1537759491000"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/email-autocomplete/0.1.3/jquery.email-autocomplete.min.js"></script>
+	<script>
+		/**
+		 * email auto complete
+		 */
+		 (function($){
+			$(function() {
+				$("#fake_supporter_emailAddress").emailautocomplete({
+					domains: [
+						"gmail.com",
+						"googlemail.com",
+						"yahoo.com",
+						"yahoo.co.uk",
+						"hotmail.com",
+						"hotmail.co.uk",
+						"live.com",
+						"msn.com",
+						"comcast.net",
+						"sbcglobal.net",
+						"verizon.net",
+						"facebook.com",
+						"outlook.com",
+						"att.net",
+						"gmx.com",
+						"icloud.com",
+						"me.com",
+						"mac.com",
+						"aol.com",
+					], //add your own domains
+					// suggClass: "eac-input-wrap",
+				});
+				$(".eac-input-wrap").css('width', "100%");
+				$("#fake_supporter_emailAddress").focus(function() {
+					$(".email-autocomplete-label").css('transform', "translate(-12px, -22px) scale(0.7)");
+				});
+				$("#fake_supporter_emailAddress").focusout(function() {
+					if (!$('#fake_supporter_emailAddress').val()) {
+						$(".email-autocomplete-label").css('transform', "translate(0, -12px)");
+					}
+				});
+				$(".eac-sugg").css('color', "#a0a0a0");
+				$(".eac-sugg").css('top', "5px");
+
+			});
+		}(jQuery));
+	</script>
 </body>
 
 </html>

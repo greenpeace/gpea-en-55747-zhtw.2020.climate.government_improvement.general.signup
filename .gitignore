@@ -3,5 +3,5 @@ node_modules
 *.lock
 *error.log
 
-.enuploader
 chromedriver
+build

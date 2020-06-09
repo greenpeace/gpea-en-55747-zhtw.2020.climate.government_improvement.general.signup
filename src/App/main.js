@@ -1,14 +1,13 @@
 import './all.css'
 import './main.scss'
 
-
 /**
  * This script use the google sheet as the DB
  */
 
 const {$, anime, autosize, Cookies, Highcharts, dataLayer} = window
-const apiUrl = "https://cors-anywhere.arpuli.com/https://script.google.com/macros/s/AKfycbx_Wg8GKV7fp_hae910yvuUzjpUbrWHPvCyRTyibdQOzQtgOTo/exec"
-// const apiUrl = "https://script.google.com/macros/s/AKfycbzRtGHGwTYjnzTUbYsSJSbWtYh7D47qGaSbLg-CeLq4v6xwWLI/exec" // test project
+const apiUrl = "https://script.google.com/macros/s/AKfycbx_Wg8GKV7fp_hae910yvuUzjpUbrWHPvCyRTyibdQOzQtgOTo/exec"
+// const apiUrl = "https://cors-anywhere.small-service.gpeastasia.org/https://script.google.com/macros/s/AKfycbx_Wg8GKV7fp_hae910yvuUzjpUbrWHPvCyRTyibdQOzQtgOTo/exec" // test project
 
 var options_id = 'en__field_supporter_questions_288643'; // 選擇關心議題的 id
 
@@ -32,13 +31,81 @@ Object.assign($.validator.messages, {
 });
 
 /**
+ * getting user opinions (message)
+ * first ten -> random 10 old queries, which wont include newest 10
+ * and the following 20 will be newest 20, 30 queries in total.
+ * if data rows less than 30.
+ *
+ */
+fetch(apiUrl+"?sheetName=notes", {
+	headers: {
+		// "X-Requested-With": "XMLHttpRequest"
+	}
+}).then(response => response.json())
+	.then(response => {
+		if (response.status==="OK") {
+			initVotingPageMarquee(response.values);
+			// initResultPageMarquee(response.values);
+		} else {
+			console.error("Cannot fetch the pulling results")
+		}
+	})
+const initVotingPageMarquee = (values) => {
+	let result;
+	// console.log(values.random10Old);
+	// console.log(values.newest20);
+	let oldMessages = shuffleArray(values.random10Old);
+	let newMessages = shuffleArray(values.newest20.slice(10,21));
+	result = newMessages.concat(oldMessages);
+
+	// console.log(result);
+	let htmlString = '';
+	for(let index in result) {
+		let item = result[index];
+		htmlString += `<strong>${item.last_name}***</strong>:“${item.message.trim()}” &nbsp;`;
+		if ((index + 1) % 3 === 0) {
+			htmlString += ` 立即投票，留下想說的話 &nbsp; `;
+		}
+	}
+	$('#voting-page-marquee').html(htmlString);
+	$(".marquee-left p").css("animation", "marquee-left 180s linear infinite");
+	// if ($(window).width() < 1000) {
+	// 	$(".marquee-left p").css("animation", "marquee-left 180s linear infinite");
+	// } else {
+	// 	$(".marquee-left p").css("animation", "marquee-left 180s linear infinite");
+	// }
+
+}
+const initResultPageMarquee = (values) => {
+	let result = values.newest20.reverse();
+	// console.log(values);
+	// console.log(result);
+	let htmlString = '';
+	for(let index in result) {
+		let item = result[index];
+		htmlString += `<strong>${item.last_name}***</strong>:“${item.message.trim()}” <br><br>`;
+	}
+	$('#result-page-marquee').html(htmlString);
+	$('.marquee-top-container').fadeIn();
+}
+const shuffleArray =(array) => {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+	}
+	return array
+}
+
+/**
  * Resolve the en page status by checking the pageJson
  *
  * @return {string} FRESH | SUCC | ERROR
  */
 const resolveEnPagePetitionStatus = () => {
 	let status = "FRESH";
-
+	// console.log(window);
 	if (window.pageJson.pageNumber === 2) {
 		status = "SUCC"; // succ page
 	} else {
@@ -74,14 +141,14 @@ window.share = () => {
 			.share({
 				title: "2020 我希望臺灣優先採取的氣候行動是...",
 				text: "節能減碳不是一個人的事！臺灣能如何扭轉氣候危機？立即分享你的想法，群策群力、守護地球！",
-				url: "https://act.gp/32dQkaT"
+				url: "https://act.greenpeace.org/page/55747/petition/1?utm_campaign=2020-climate-vote&utm_source=socialshare&utm_medium=socialorganic&utm_content=2020-climate-vote_footer_social_share"
 			})
 			.then(() => console.log("Successfully shared"))
 			.catch(error => console.log("Error sharing:", error));
 	} else {
 		// provide a fallback here
 		var baseURL = "https://www.facebook.com/sharer/sharer.php";
-		var u = "https://act.gp/32dQkaT";
+		var u = "https://act.greenpeace.org/page/55747/petition/1?utm_campaign=2020-climate-vote&utm_source=socialshare&utm_medium=socialorganic&utm_content=2020-climate-vote_footer_social_share";
 		console.log('open', baseURL + "?u=" + encodeURIComponent(u))
 		window.open(
 			baseURL + "?u=" + encodeURIComponent(u),
@@ -188,18 +255,15 @@ $(function(){
 
 				// log this event
 				gtmTrack({
-					'category': 'Petitions',
-					'action': 'Vote',
-					'label': '2020 climate win',
+					'category': 'petitions',
+					'action': 'vote',
+					'label': '2020-climate-vote',
 					'value' : chosens.join(",")
 				});
 
 				// send the request to server2
 				fetch(apiUrl+"?sheetName=votes", {
 					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
 					body: JSON.stringify({
 						rows: [
 							{
@@ -226,6 +290,7 @@ $(function(){
 			// auto-height the textarea
 			autosize($('#typing-panel textarea').get(0));
 
+			// TODO:
 			// bind submit event for the typing-panel
 			$('#type-next-btn').click(function(e){
 				e.preventDefault();
@@ -236,18 +301,15 @@ $(function(){
 
 					// log event
 					gtmTrack({
-						'category': 'Petitions',
-						'action': 'Custom Vote',
-						'label': '2020 climate win',
+						'category': 'petitions',
+						'action': 'custom vote',
+						'label': '2020-climate-vote',
 						'value' : text
 					});
 
 					// send to server
 					fetch(apiUrl+"?sheetName=notes", {
 						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json'
-						},
 						body: JSON.stringify({
 							rows: [{ip:ip, message: text}]
 						})
@@ -382,7 +444,6 @@ $(function(){
 			var _ = this;
 			_.$container = $('#form');
 
-
 			_.$container.find('input, select').bind('change blur', function(){
 				if($(this).attr('id') == 'fake_optin') {
 					if(document.getElementById('fake_optin').checked){
@@ -429,13 +490,13 @@ $(function(){
 			$.validator.addMethod(
 				"taiwan-phone",
 				function (value, element) {
-					console.log('do vlaidate')
+					console.log('do validate')
 					return this.optional(element) || /^[\d \-+]{7,15}$/i.test(value);
 				},
 				"電話格式不正確，請只輸入數字 0912345678 或 02-12345678")
 
 			$.validator.addClassRules({ // connect it to a css class
-			    "taiwan-phone" : { "taiwan-phone" : true }
+				"taiwan-phone" : { "taiwan-phone" : true }
 			});
 
 
@@ -472,16 +533,31 @@ $(function(){
 					} else {
 						$('#'+nro_data_ok_id).prop( "checked", false );
 					}
+
+					// handling opinion submit
+					let message = $('#fake_message').val().trim();
+					let last_name = $('#fake_supporter_lastName').val();
+					let email = $('#fake_supporter_emailAddress').val();
+					// console.log(message);
+
+					fetch(apiUrl+"?sheetName=notes", {
+						method: 'POST',
+						body: JSON.stringify({
+							rows: [{ip:ip, message, last_name, email}]
+						})
+					})
+
 					$("form.en__component--page").submit();
+
 				},
 				invalidHandler: function(event, validator) {
 					// 'this' refers to the form
 					var errors = validator.numberOfInvalids();
 					if (errors) {
+						// console.log(errors)
 						var message = errors == 1
 							? 'You missed 1 field. It has been highlighted'
 							: 'You missed ' + errors + ' fields. They have been highlighted';
-						// alert(message);
 						$("div.error").show();
 					} else {
 						$("div.error").hide();
@@ -561,6 +637,7 @@ $(function(){
 
 			$('body').removeClass('intro');
 
+			_.fetchResultMarquee();
 			_.fetchChartData()
 				.then(() => {_.renderChart()})
 				.then(() => {this.show()})
@@ -574,8 +651,11 @@ $(function(){
 				})
 			}
 
-			return fetch(apiUrl+"?sheetName=votes_summary")
-				.then(response => response.json())
+			return fetch(apiUrl+"?sheetName=votes_summary", {
+				headers: {
+					// "X-Requested-With": "XMLHttpRequest"
+				}
+			}).then(response => response.json())
 				.then(response => {
 					if (response.status==="OK") {
 						_.chartDateFetched = true;
@@ -602,16 +682,29 @@ $(function(){
 
 			Highcharts.chart('chart', {
 				chart: {
-					plotShadow: false,
+					// plotShadow: false,
 					type: 'bar',
 					height: '400px',
 				},
 				title: {text: ''},
 				xAxis: {
-					visible: true,
+					categories: resultData.map((item) => {
+						let checked = chosens.indexOf(item[0])>-1;
+						return `<span style="white-space: nowrap;">${checked ? '<i class="fas fa-check-circle"></i> ' : ''} ${item[0]}</span>`
+					}),
+					title: {
+						text: null
+					},
 					labels: {
-						enabled: false
-					}
+						x: 10,
+						y: -20,
+						align: 'left',
+						style: {
+							color: '#fff',
+							fontSize: '1rem'
+						},
+						useHTML: true,
+					},
 				},
 				yAxis: {
 					visible: false,
@@ -620,7 +713,18 @@ $(function(){
 					}
 				},
 				tooltip: { enabled: false },
-				plotOptions: {},
+				plotOptions: {
+					bar: {
+						dataLabels: {
+							enabled: true
+						}
+					},
+					series: {
+						pointWidth: 10,
+						groupPadding: 0.2,
+						pointPadding: 0.01
+					}
+				},
 				legend: {
 					enabled: false
 				},
@@ -634,18 +738,46 @@ $(function(){
 						useHTML: true,
 						formatter:function() {
 							var pcnt = (this.y / this.series.data.map(p => p.y).reduce((a, b) => a + b, 0)) * 100;
-							let checked = chosens.indexOf(this.point.name)>-1
-							return `${checked ? '<i class="fas fa-check-circle"></i> ' : ''}${this.point.name} ${pcnt.toFixed(1)+"%"}` ;
+							// let checked = chosens.indexOf(this.point.name)>-1
+							// return `${checked ? '<i class="fas fa-check-circle"></i> ' : ''}${this.point.name} ${pcnt.toFixed(1)+"%"}` ;
+							return `${pcnt.toFixed(1)+"%"}` ;
 						},
-						inside: true,
-						align: 'left'
+						inside: false,
 					},
 					data: resultData,
-					pointWidth: 50
+					pointWidth: 15
 				}]
 			});
 		},
+		fetchResultMarquee: () => {
+			fetch(apiUrl+"?sheetName=notes", {
+				headers: {
+					// "X-Requested-With": "XMLHttpRequest"
+				}
+			}).then(response => response.json())
+				.then(response => {
+					if (response.status==="OK") {
+						initResultPageMarquee(response.values);
+					} else {
+						console.error("Cannot fetch the pulling results")
+					}
+				})
+		},
+		resize: function(){
+			if ($(window).width() < 1000) {
+				$('#result>.left-col').insertAfter('#result>.right-col');
+			} else {
+				$('#result>.right-col').insertAfter('#result>.left-col');
+			}
+		},
 		show: function(){
+
+			$('.share-btn-copy').html($('#result>.right-col>.content>.btns').clone());
+			if ($(window).width() < 1000) {
+				$('#result>.left-col').insertAfter('#result>.right-col');
+			} else {
+				$('#result>.right-col').insertAfter('#result>.left-col');
+			}
 			return new Promise((resolve, reject) => {
 			var formTL = anime.timeline({
 				easing: 'easeOutQuart',
@@ -722,6 +854,7 @@ $(function(){
 	const EN_PAGE_STATUS = resolveEnPagePetitionStatus()
 	console.log("EN_PAGE_STATUS", EN_PAGE_STATUS)
 	if (EN_PAGE_STATUS==="FRESH") {
+	// if (false) {
 		if($('#voting').length == 1){
 			votingPage.init();
 			formPage.init();
@@ -737,6 +870,7 @@ $(function(){
 			if(introPage.active) introPage.resize();
 		});
 	} else if (EN_PAGE_STATUS==="SUCC") {
+	// } else if (true) {
 		pageHandler.goTo('#result', '#intro');
 		resultPage.init();
 	}
